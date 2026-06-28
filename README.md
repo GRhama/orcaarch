@@ -18,13 +18,104 @@ Built in Go with Clean Architecture, integer-scaled Money, deterministic mock da
   <img src="docs/assets/orcaarch-flow.png" alt="How OrcaArch works — from inputs to controls, reports, CSV and read-only API" width="1000">
 </p>
 
-## Try it
+## Getting Started
+
+OrcaArch is already available as a public GitHub repository and can be tested locally today.
+
+The `create-orcaarch` package has not been published to npm yet. Until npm publication, use `npm link` to test the CLI locally.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/GRhama/orcaarch.git
+cd orcaarch
+```
+
+### 2. Run the Go test suite
+
+```bash
+go test ./...
+```
+
+This validates the logistics reconciliation engine, including domain rules, service orchestration, reporting, export, and API packages.
+
+### 3. Run the API locally
+
+```bash
+make run-api
+```
+
+The API starts on port `8080` and exposes read-only report endpoints:
+
+```bash
+curl http://localhost:8080/api/v1/reports/inventory
+curl http://localhost:8080/api/v1/reports/ledger
+curl http://localhost:8080/api/v1/reports/risk
+```
+
+### 4. Export CSV reports
+
+```bash
+make export-csv
+```
+
+This generates:
+
+```text
+reconciliation.csv
+ledger.csv
+risk.csv
+```
+
+### 5. Test the CLI locally
+
+The CLI is designed to be used as `create-orcaarch`. Since the npm package is not published yet, link it locally first:
+
+```bash
+cd installer/create-orcaarch
+npm link
+```
+
+Then generate a demo project from any temporary directory:
+
+```bash
+cd /tmp
+mkdir orcaarch-demo
+cd orcaarch-demo
+
+create-orcaarch
+```
+
+Follow the prompts:
+
+```text
+Project name: demo
+Scenario: Logistics / Supply Chain
+Volume: 1_000
+```
+
+Then run the generated scaffold:
+
+```bash
+cd demo
+make run
+```
+
+To remove the local CLI link:
+
+```bash
+npm unlink -g create-orcaarch
+```
+
+### Planned npm usage
+
+After the package is published to npm, the intended usage will be:
 
 ```bash
 npx create-orcaarch
-cd <project-name>
-make run
 ```
+
+For now, use the local `npm link` workflow above.
 
 ## Source engine
 
@@ -59,7 +150,7 @@ make export-csv   # writes reconciliation.csv, ledger.csv, risk.csv
 ## Requirements
 
 - Go 1.22+
-- Node 16+ (for `npx create-orcaarch`)
+- Node 16+ (for CLI testing via `npm link`; or `npx create-orcaarch` after publish)
 
 ## Documentation
 
@@ -85,35 +176,104 @@ Motor de reconciliação configurável por domínio. Cada cenário tem suas pró
 
 Provar que a combinação de visão de produto + workflow de IA bem estruturado + Go clean entrega software técnico de qualidade sem precisar de uma equipe de engenharia. O fluxo completo — do insumo até o CSV e a API — está acima neste README.
 
-## Testar com npx
+## Como testar localmente
+
+O OrcaArch já está disponível como repositório público no GitHub e pode ser testado localmente hoje.
+
+O pacote `create-orcaarch` ainda não foi publicado no npm. Até a publicação, use `npm link` para testar a CLI localmente.
+
+### 1. Clone o repositório
 
 ```bash
-npx create-orcaarch
-cd <nome-do-projeto>
-make run
+git clone https://github.com/GRhama/orcaarch.git
+cd orcaarch
 ```
 
-Gera um scaffold funcional com o cenário escolhido, pronto para rodar localmente.
+### 2. Rode a suíte de testes em Go
 
-## Rodar API local
+```bash
+go test ./...
+```
+
+Esse comando valida o motor logístico de conciliação, incluindo regras de domínio, orquestração de serviço, relatórios, exportação e API.
+
+### 3. Rode a API localmente
 
 ```bash
 make run-api
-# API disponível em http://localhost:8080
 ```
 
-Endpoints disponíveis (somente leitura, sem autenticação):
+A API sobe na porta `8080` e expõe endpoints read-only de relatórios:
 
-- `GET /inventory` — inventário com status de reconciliação
-- `GET /reconciliation` — resumo de discrepâncias
-- `GET /risk` — itens com risco calculado
+```bash
+curl http://localhost:8080/api/v1/reports/inventory
+curl http://localhost:8080/api/v1/reports/ledger
+curl http://localhost:8080/api/v1/reports/risk
+```
 
-## Exportar CSV
+### 4. Exporte relatórios CSV
 
 ```bash
 make export-csv
-# Gera: reconciliation.csv, ledger.csv, risk.csv
 ```
+
+Esse comando gera:
+
+```text
+reconciliation.csv
+ledger.csv
+risk.csv
+```
+
+### 5. Teste a CLI localmente
+
+A CLI foi desenhada para ser usada como `create-orcaarch`. Como o pacote ainda não foi publicado no npm, primeiro crie o link local:
+
+```bash
+cd installer/create-orcaarch
+npm link
+```
+
+Depois gere um projeto demo a partir de qualquer diretório temporário:
+
+```bash
+cd /tmp
+mkdir orcaarch-demo
+cd orcaarch-demo
+
+create-orcaarch
+```
+
+Responda aos prompts:
+
+```text
+Project name: demo
+Scenario: Logistics / Supply Chain
+Volume: 1_000
+```
+
+Depois rode o scaffold gerado:
+
+```bash
+cd demo
+make run
+```
+
+Para remover o link local da CLI:
+
+```bash
+npm unlink -g create-orcaarch
+```
+
+### Uso futuro via npm
+
+Depois que o pacote for publicado no npm, o uso pretendido será:
+
+```bash
+npx create-orcaarch
+```
+
+Por enquanto, use o fluxo local com `npm link`.
 
 ## Cenários
 
