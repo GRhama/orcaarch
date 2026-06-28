@@ -1,0 +1,12 @@
+{
+  "name": "create-orcaarch",
+  "version": "0.1.0",
+  "description": "Interactive CLI installer for OrcaArch demo scenarios",
+  "bin": {
+    "create-orcaarch": "./bin/create-orcaarch.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "files": ["bin/", "templates/"]
+}

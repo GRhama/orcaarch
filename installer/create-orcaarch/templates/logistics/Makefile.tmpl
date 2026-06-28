@@ -1,0 +1,32 @@
+.PHONY: run explain source-commands
+
+PROJECT = {{PROJECT_NAME}}
+VOLUME  = {{VOLUME}}
+
+run:
+	go run main.go
+
+explain:
+	@echo "Pipeline: $(PROJECT)"
+	@echo "Volume  : $(VOLUME) records"
+	@echo ""
+	@echo "  mock.Generate($(VOLUME))"
+	@echo "  → Reconcile      ERP vs carrier invoice by tracking_number"
+	@echo "  → Landed Cost    freight + duties + insurance"
+	@echo "  → WAC            weighted average cost per SKU"
+	@echo "  → Ledger         double-entry per reconciliation status"
+	@echo "  → Quarantine     invoices without ERP match"
+	@echo "  → Reprocess      reversal + recalculation on correction"
+	@echo "  → Reports        CSV + read-only API"
+
+source-commands:
+	@echo "Commands available in the full source repository:"
+	@echo ""
+	@echo "  go test ./..."
+	@echo "  go test ./internal/service/... -bench=. -benchmem"
+	@echo "  make export-csv"
+	@echo "  curl localhost:8080/api/v1/reports/inventory"
+	@echo "  curl localhost:8080/api/v1/reports/ledger"
+	@echo "  curl localhost:8080/api/v1/reports/risk"
+	@echo ""
+	@echo "  Clone: https://github.com/GRhama/orcaarch"
