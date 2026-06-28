@@ -4,6 +4,10 @@
 
 # OrcaArch
 
+[English](#orcaarch) · [Português](#orcaarch-pt-br)
+
+---
+
 Reconciliation engine playground for domain-specific pipelines — logistics and financial.
 
 Built in Go with Clean Architecture, integer-scaled Money, deterministic mock data, and a structured AI-assisted development workflow.
@@ -66,3 +70,72 @@ make export-csv   # writes reconciliation.csv, ledger.csv, risk.csv
 - [Scenarios](docs/SCENARIOS.md)
 - [Benchmarks](docs/BENCHMARKS.md)
 - [Financial Scenario Design](docs/FINANCIAL_SCENARIO_DESIGN.md)
+
+---
+
+# OrcaArch PT-BR
+
+OrcaArch é um motor de reconciliação construído em Go, organizado em pipelines por domínio. O projeto demonstra que um Product Manager com visão técnica consegue arquitetar e entregar uma solução multi-cenário — com suporte de IA estruturado e revisão humana em cada etapa.
+
+## O que é
+
+Motor de reconciliação configurável por domínio. Cada cenário tem suas próprias regras de negócio, mas compartilha os mesmos padrões arquiteturais: Clean Architecture, Money em inteiro escalado, dados mock determinísticos, API somente-leitura e exportação CSV.
+
+## Por que existe
+
+Provar que a combinação de visão de produto + workflow de IA bem estruturado + Go clean entrega software técnico de qualidade sem precisar de uma equipe de engenharia. O fluxo completo — do insumo até o CSV e a API — está acima neste README.
+
+## Testar com npx
+
+```bash
+npx create-orcaarch
+cd <nome-do-projeto>
+make run
+```
+
+Gera um scaffold funcional com o cenário escolhido, pronto para rodar localmente.
+
+## Rodar API local
+
+```bash
+make run-api
+# API disponível em http://localhost:8080
+```
+
+Endpoints disponíveis (somente leitura, sem autenticação):
+
+- `GET /inventory` — inventário com status de reconciliação
+- `GET /reconciliation` — resumo de discrepâncias
+- `GET /risk` — itens com risco calculado
+
+## Exportar CSV
+
+```bash
+make export-csv
+# Gera: reconciliation.csv, ledger.csv, risk.csv
+```
+
+## Cenários
+
+| Cenário | Status |
+|---|---|
+| Logistics / Supply Chain | ✅ Implementado |
+| Financial / Banking | 🔵 Em Design — ver [docs/FINANCIAL_SCENARIO_DESIGN.md](docs/FINANCIAL_SCENARIO_DESIGN.md) |
+
+## Desenvolvimento assistido por IA
+
+O projeto foi desenvolvido com workflow de IA estruturado: cada tarefa tem contexto mínimo definido, gates de revisão humana e rastreabilidade de decisão. Nenhum artefato foi gerado e aceito cegamente — toda decisão arquitetural foi revisada e documentada.
+
+## API First
+
+Toda a lógica de negócio é acessível via API HTTP antes de qualquer integração externa. Isso permite validar o comportamento do motor de reconciliação de forma isolada, sem depender de banco de dados ou serviços externos.
+
+## Documentação
+
+- [Arquitetura](docs/ARCHITECTURE.md)
+- [API First](docs/API_FIRST.md)
+- [Workflow com IA](docs/AI_WORKFLOW.md)
+- [Caso de Produto](docs/PRODUCT_CASE.md)
+- [Cenários](docs/SCENARIOS.md)
+- [Benchmarks](docs/BENCHMARKS.md)
+- [Design do Cenário Financeiro](docs/FINANCIAL_SCENARIO_DESIGN.md)
