@@ -1,0 +1,6 @@
+*.csv
+*.exe
+*.test
+/vendor/
+node_modules/
+*.log
