@@ -48,9 +48,9 @@ make run-api
 The API starts on port `8080` and exposes read-only report endpoints:
 
 ```bash
-curl http://localhost:8080/api/v1/reports/inventory
-curl http://localhost:8080/api/v1/reports/ledger
-curl http://localhost:8080/api/v1/reports/risk
+curl -s http://localhost:8080/api/v1/reports/inventory | head -c 300
+curl -s http://localhost:8080/api/v1/reports/ledger | head -c 300
+curl -s http://localhost:8080/api/v1/reports/risk | head -c 300
 ```
 
 ### 4. Export CSV reports
@@ -98,8 +98,13 @@ Then run the generated scaffold:
 
 ```bash
 cd demo
-make run
+make run            # print pipeline config
+make reports        # generate CSV in ./output (clones engine automatically)
+make api            # start API on localhost:8080 (clones engine automatically)
+make help           # list all available targets
 ```
+
+The scaffold is operational: `make reports` generates real CSV files and `make api` starts the read-only API. The OrcaArch engine is cloned into `.orcaarch/source` automatically on first use — no manual setup needed.
 
 To remove the local CLI link:
 
@@ -206,9 +211,9 @@ make run-api
 A API sobe na porta `8080` e expõe endpoints read-only de relatórios:
 
 ```bash
-curl http://localhost:8080/api/v1/reports/inventory
-curl http://localhost:8080/api/v1/reports/ledger
-curl http://localhost:8080/api/v1/reports/risk
+curl -s http://localhost:8080/api/v1/reports/inventory | head -c 300
+curl -s http://localhost:8080/api/v1/reports/ledger | head -c 300
+curl -s http://localhost:8080/api/v1/reports/risk | head -c 300
 ```
 
 ### 4. Exporte relatórios CSV
@@ -256,8 +261,13 @@ Depois rode o scaffold gerado:
 
 ```bash
 cd demo
-make run
+make run            # exibe config do pipeline
+make reports        # gera CSV em ./output (clona engine automaticamente)
+make api            # sobe API em localhost:8080 (clona engine automaticamente)
+make help           # lista todos os targets disponíveis
 ```
+
+O scaffold é operacional: `make reports` gera CSVs reais e `make api` sobe a API read-only. O engine OrcaArch é clonado em `.orcaarch/source` automaticamente no primeiro uso — nenhuma configuração manual necessária.
 
 Para remover o link local da CLI:
 

@@ -1,32 +1,77 @@
-.PHONY: run explain source-commands
+.PHONY: help run setup-source test reports api bench wac source-commands clean
 
-PROJECT = {{PROJECT_NAME}}
-VOLUME  = {{VOLUME}}
+PROJECT    = {{PROJECT_NAME}}
+VOLUME     = {{VOLUME}}
+VOLUME_NUM = {{VOLUME_NUM}}
+SOURCE     = .orcaarch/source
+
+help:
+	@echo "$(PROJECT) — OrcaArch scaffold"
+	@echo ""
+	@echo "  make run            print pipeline config"
+	@echo "  make setup-source   clone OrcaArch engine into .orcaarch/source"
+	@echo "  make test           run full test suite"
+	@echo "  make reports        generate CSV reports in ./output (volume: $(VOLUME))"
+	@echo "  make api            start read-only API on localhost:8080 (volume: $(VOLUME))"
+	@echo "  make bench          run benchmarks"
+	@echo "  make wac            run reports (WAC is part of the pipeline)"
+	@echo "  make source-commands list all commands"
+	@echo "  make clean          remove ./output and .orcaarch/source"
 
 run:
 	go run main.go
 
-explain:
-	@echo "Pipeline: $(PROJECT)"
-	@echo "Volume  : $(VOLUME) records"
+setup-source:
+	@if [ -d "$(SOURCE)" ]; then \
+		echo "Source already present at $(SOURCE)"; \
+	else \
+		echo "Cloning OrcaArch engine into $(SOURCE)..."; \
+		mkdir -p .orcaarch && \
+		git clone https://github.com/GRhama/orcaarch.git $(SOURCE); \
+		echo "Engine ready."; \
+	fi
+
+test: setup-source
+	$(MAKE) -C $(SOURCE) test
+
+reports: setup-source
+	$(MAKE) -C $(SOURCE) export-csv VOLUME=$(VOLUME_NUM)
+	mkdir -p output
+	cp $(SOURCE)/reconciliation.csv output/reconciliation.csv
+	cp $(SOURCE)/ledger.csv output/ledger.csv
+	cp $(SOURCE)/risk.csv output/risk.csv
 	@echo ""
-	@echo "  mock.Generate($(VOLUME))"
-	@echo "  → Reconcile      ERP vs carrier invoice by tracking_number"
-	@echo "  → Landed Cost    freight + duties + insurance"
-	@echo "  → WAC            weighted average cost per SKU"
-	@echo "  → Ledger         double-entry per reconciliation status"
-	@echo "  → Quarantine     invoices without ERP match"
-	@echo "  → Reprocess      reversal + recalculation on correction"
-	@echo "  → Reports        CSV + read-only API"
+	@echo "Reports generated in ./output/ ($(VOLUME) records)"
+	@echo "  - output/reconciliation.csv"
+	@echo "  - output/ledger.csv"
+	@echo "  - output/risk.csv"
+
+api: setup-source
+	@echo "Starting OrcaArch API on localhost:8080 ($(VOLUME) records)"
+	@echo "Press Ctrl+C to stop."
+	@echo ""
+	$(MAKE) -C $(SOURCE) run-api VOLUME=$(VOLUME_NUM)
+
+bench: setup-source
+	$(MAKE) -C $(SOURCE) bench
+
+wac: reports
+	@echo ""
+	@echo "WAC (Weighted Average Cost) runs inside the full logistics pipeline."
+	@echo "Results are in output/reconciliation.csv."
 
 source-commands:
-	@echo "Commands available in the full source repository:"
+	@echo "Commands available in this scaffold:"
 	@echo ""
-	@echo "  go test ./..."
-	@echo "  go test ./internal/service/... -bench=. -benchmem"
-	@echo "  make export-csv"
-	@echo "  curl localhost:8080/api/v1/reports/inventory"
-	@echo "  curl localhost:8080/api/v1/reports/ledger"
-	@echo "  curl localhost:8080/api/v1/reports/risk"
-	@echo ""
-	@echo "  Clone: https://github.com/GRhama/orcaarch"
+	@echo "  make setup-source"
+	@echo "  make test"
+	@echo "  make reports"
+	@echo "  make api"
+	@echo "  make bench"
+	@echo "  make clean"
+
+clean:
+	rm -rf output
+	rm -rf .orcaarch/source
+	@echo "Cleaned output/ and .orcaarch/source"
+	@echo "main.go, Makefile, and README.md preserved."

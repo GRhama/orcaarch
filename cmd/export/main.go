@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"log"
 	"os"
 
 	"orcaarch/internal/export"
@@ -10,7 +12,13 @@ import (
 )
 
 func main() {
-	result, err := service.Process(1000)
+	volume := flag.Int("volume", 1000, "number of records to process")
+	flag.Parse()
+	if *volume <= 0 {
+		log.Fatal("volume must be greater than zero")
+	}
+
+	result, err := service.Process(*volume)
 	if err != nil {
 		panic(err)
 	}

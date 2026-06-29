@@ -98,7 +98,7 @@ async function main() {
     { tmpl: 'README.md.tmpl', out: 'README.md' },
   ];
 
-  const vars = { PROJECT_NAME: projectName, VOLUME: volume };
+  const vars = { PROJECT_NAME: projectName, VOLUME: volume, VOLUME_NUM: volume.replace(/_/g, '') };
 
   for (const { tmpl, out } of files) {
     const raw      = fs.readFileSync(path.join(TEMPLATES_DIR, tmpl), 'utf8');
@@ -112,7 +112,7 @@ async function main() {
   console.log('  README.md');
   console.log(`\nNext steps:`);
   console.log(`  cd ${projectName}`);
-  console.log(`  make run`);
+  console.log(`  make help`);
 }
 
 main().catch(err => { console.error(err.message); rl.close(); process.exit(1); });
